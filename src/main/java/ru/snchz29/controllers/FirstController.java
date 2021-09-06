@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("")
 public class FirstController {
-    @GetMapping("/hello")
+    @GetMapping("")
     public String helloPage() {
         return "hello_world";
     }
 
-    @GetMapping("")
+    @GetMapping("/bye")
     public String goodbyePage() {
         return "first/goodbye";
     }
