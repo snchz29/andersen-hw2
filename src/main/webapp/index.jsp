@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Hello Никитос!</h2>
+<h2>Hello JAVA!</h2>
 </body>
 </html>
