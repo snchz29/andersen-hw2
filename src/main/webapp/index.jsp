@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Hello TOMCAT!</h2>
+<a href="${pageContext.request.contextPath}/db">Open db page</a>
 </body>
 </html>
