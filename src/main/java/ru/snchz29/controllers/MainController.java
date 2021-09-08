@@ -27,9 +27,9 @@ public class MainController extends AbstractController {
             int id = Integer.parseInt(req.getParameter("id"));
             if ("delete".equals(req.getParameter("action"))) {
                 dao.deleteUser(id);
-                resp.sendRedirect(req.getServletPath());
+                resp.sendRedirect(req.getContextPath() + "/db");
             } else if ("update".equals(req.getParameter("action"))) {
-                resp.sendRedirect(req.getServletPath());
+                resp.sendRedirect(req.getContextPath() + "/db");
             } else {
                 User user = dao.getUserById(id);
                 showUserPage(req, resp, user);
@@ -46,7 +46,7 @@ public class MainController extends AbstractController {
         user.setSurname(req.getParameter("surname"));
         user.setAge(Integer.parseInt(req.getParameter("age")));
         dao.insertUser(user);
-        resp.sendRedirect(req.getServletPath());
+        resp.sendRedirect(req.getContextPath() + "/db");
     }
 
     private void showUserPage(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
@@ -55,7 +55,7 @@ public class MainController extends AbstractController {
         out.println("<head><title>Try to connect</title></head>");
         out.println("<body>");
         out.println("<h3>" + user.getName() + " " + user.getSurname() + ", " + user.getAge() + "<h3><br>");
-        out.println("<a href=" + req.getServletPath() + "?id=" + user.getId() + "&action=delete>DELETE</a>");
+        out.println("<a href=" + req.getContextPath() + "/db?id=" + user.getId() + "&action=delete>DELETE</a>");
         out.println("</body>");
         out.println("<html>");
     }
@@ -68,7 +68,7 @@ public class MainController extends AbstractController {
 
         Collection<User> users = dao.getAllUsers();
         for (User user : users) {
-            out.println("<a href=" + req.getServletPath() + "?id=" + user.getId() + ">"
+            out.println("<a href=" + req.getContextPath() + "/db?id=" + user.getId() + ">"
                     + user.getName() + " "
                     + user.getSurname() + ", "
                     + user.getAge() + "</a><br>");
@@ -82,7 +82,7 @@ public class MainController extends AbstractController {
 
     private void showForm(HttpServletRequest req, ServletOutputStream out) throws IOException {
         out.println("<hr>");
-        out.println("<form action=" + req.getServletPath() + " method=post>");
+        out.println("<form action=" + req.getContextPath() + "/db method=post>");
         out.println("Name:<input type=text name=name><br/><br/>");
         out.println("Surname:<input type=text name=surname><br/><br/>");
         out.println("Age:<input type=number name=age><br/><br/>");
