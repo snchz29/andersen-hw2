@@ -29,7 +29,7 @@ public class PageRenderer {
 
     public void showFullPage(String contextPath, ServletOutputStream out, Collection<User> users) throws IOException {
         out.println("<html>");
-        out.println("<head><title>Try to connect</title></head>");
+        out.println("<head><title>ANDERSEN</title></head>");
         out.println("<body>");
 
         for (User user : users) {
@@ -46,6 +46,8 @@ public class PageRenderer {
     }
 
     public void showForm(String contextPath, ServletOutputStream out) throws IOException {
+        out.println("<hr>");
+        out.println("<hr>");
         out.println("<hr>");
         out.println("<form action=" + contextPath + "/db method=post>");
         out.println("Name:<br><input type=text name=name><br/><br/>");
