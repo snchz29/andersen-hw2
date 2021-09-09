@@ -9,7 +9,7 @@ import java.util.Collection;
 public class PageRenderer {
     public void showUserPage(String contextPath, ServletOutputStream out, User user) throws IOException {
         out.println("<html>");
-        out.println("<head><title>Try to connect</title></head>");
+        out.println("<head><title>ANDERSEN</title></head>");
         out.println("<body>");
         out.println("<h3>" + user.getName() + " " + user.getSurname() + ", " + user.getAge() + "<h3><br>");
         out.println("<hr>");
