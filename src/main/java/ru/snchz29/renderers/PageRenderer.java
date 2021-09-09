@@ -29,9 +29,9 @@ public class PageRenderer {
 
     public void showFullPage(String contextPath, ServletOutputStream out, Collection<User> users) throws IOException {
         out.println("<html>");
-        out.println("<head><title>ANDERSEN</title></head>");
+        out.println("<head><title>1234</title></head>");
         out.println("<body>");
-
+        out.println("<p> 123 </p>");
         for (User user : users) {
             out.println("<a href=" + contextPath + "/db?id=" + user.getId() + ">"
                     + user.getName() + " "
