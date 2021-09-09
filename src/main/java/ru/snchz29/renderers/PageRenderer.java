@@ -13,6 +13,8 @@ public class PageRenderer {
         out.println("<body>");
         out.println("<h3>" + user.getName() + " " + user.getSurname() + ", " + user.getAge() + "<h3><br>");
         out.println("<hr>");
+        out.println("<hr>");
+        out.println("<hr>");
         out.println("<form action=" + contextPath + "/db?id=" + user.getId() + " method=post>");
         out.println("Name:<br><input type=text name=name value=" + user.getName() + "><br/><br/>");
         out.println("Surname:<br><input type=text name=surname value=" + user.getSurname() + "><br/><br/>");
