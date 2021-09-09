@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Properties;
 
+import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
+
 @Log
 public class UsersDAO {
     private Connection connection;
@@ -52,6 +54,9 @@ public class UsersDAO {
         props.setProperty("user", "postgres");
         props.setProperty("password", "1234");
         connection = DriverManager.getConnection("jdbc:postgresql://192.168.100.7:5432/andersen_hw2", props);
+        if (connection.getMetaData().supportsTransactionIsolationLevel(TRANSACTION_READ_COMMITTED)) {
+            connection.setTransactionIsolation(TRANSACTION_READ_COMMITTED);
+        }
     }
 
     public void close() throws SQLException {
