@@ -3,12 +3,7 @@ package ru.snchz29.dao;
 import lombok.extern.java.Log;
 import ru.snchz29.models.User;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -61,7 +56,7 @@ public class UsersDaoImpl implements UsersDao {
         PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
-        if (!resultSet.next() || resultSet.getBoolean("is_deleted")){
+        if (!resultSet.next() || resultSet.getBoolean("is_deleted")) {
             throw new UserNotFoundException();
         } else {
             return createUserFromResultSet(resultSet);
@@ -76,7 +71,7 @@ public class UsersDaoImpl implements UsersDao {
         Collection<User> users = new LinkedList<>();
         while (resultSet.next()) {
             boolean isDeleted = resultSet.getBoolean("is_deleted");
-            if (!isDeleted){
+            if (!isDeleted) {
                 users.add(createUserFromResultSet(resultSet));
             }
         }
