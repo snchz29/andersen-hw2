@@ -1,15 +1,16 @@
 package ru.snchz29.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@NoArgsConstructor
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+@Data
 public class User {
-    private int id;
+    private long id;
     private String name;
     private String surname;
     private int age;
+    private LocalDateTime timeCreated;
+    private LocalDateTime lastUpdated;
+    private boolean isDeleted;
 }
