@@ -2,7 +2,8 @@ package ru.snchz29.controllers;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import ru.snchz29.dao.UsersDAO;
+import ru.snchz29.dao.UsersDao;
+import ru.snchz29.dao.UsersDaoImpl;
 import ru.snchz29.models.User;
 import ru.snchz29.renderers.PageRenderer;
 
@@ -13,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Log
-@WebServlet(name = "MainController", urlPatterns = "/db")
+@WebServlet(name = "MainController", urlPatterns = "")
 public class MainController extends HttpServlet {
-    private final UsersDAO dao = new UsersDAO();
+    private final UsersDao dao = new UsersDaoImpl();
     private final PageRenderer renderer = new PageRenderer();
 
     @SneakyThrows
@@ -28,9 +29,10 @@ public class MainController extends HttpServlet {
             int id = Integer.parseInt(req.getParameter("id"));
             if ("delete".equals(req.getParameter("action"))) {
                 dao.deleteUser(id);
-                resp.sendRedirect(req.getContextPath() + "/db");
+                resp.sendRedirect(req.getContextPath());
             } else {
                 User user = dao.getUserById(id);
+                log.info(user.toString());
                 renderer.showUserPage(req.getContextPath(), resp.getOutputStream(), user);
             }
         }
@@ -54,7 +56,7 @@ public class MainController extends HttpServlet {
 
         if (req.getQueryString() == null) {
             dao.insertUser(user);
-            resp.sendRedirect(req.getContextPath() + "/db");
+            resp.sendRedirect(req.getContextPath());
         } else {
             int id = Integer.parseInt(req.getParameter("id"));
             dao.updateUser(id, user);
