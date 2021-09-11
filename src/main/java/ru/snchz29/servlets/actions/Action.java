@@ -1,8 +1,7 @@
 package ru.snchz29.servlets.actions;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.thymeleaf.context.WebContext;
 
 public interface Action {
-    String exec(HttpServletRequest request, HttpServletResponse response);
+    String exec(WebContext context);
 }

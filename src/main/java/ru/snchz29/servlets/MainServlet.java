@@ -46,8 +46,9 @@ public class MainServlet extends HttpServlet {
         WebContext context = new WebContext(req, resp, getServletContext(), req.getLocale());
         String actionKey = req.getParameter("action");
         Action action = actionMap.get(actionKey);
-        String view = action.exec(req, resp);
+        String view = action.exec(context);
         log.info(view);
+        log.info(context.getVariable("users").toString());
         templateEngine.process(view, context, resp.getWriter());
     }
 

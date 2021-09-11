@@ -1,15 +1,15 @@
 package ru.snchz29.servlets.actions;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.thymeleaf.context.WebContext;
+
 import java.sql.SQLException;
 
 public class DeleteAction extends AbstractAction {
 
     @Override
-    public String exec(HttpServletRequest request, HttpServletResponse response) {
+    public String exec(WebContext context) {
         try {
-            dao.deleteUser(Integer.parseInt(request.getParameter("id")));
+            dao.deleteUser(Integer.parseInt(context.getRequest().getParameter("id")));
             return "redirect to root";
         } catch (SQLException e) {
             e.printStackTrace();
