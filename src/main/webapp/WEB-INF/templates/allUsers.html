@@ -5,12 +5,14 @@
     <title>All Users</title>
 </head>
 <body>
-    <a th:href="@{/(action='get', id=${user.getId()})}" th:each="user : ${users}">
-        <span th:text="${user.getName()}"></span>
-        <span th:text="${user.getSurname()}"></span>
-        <span th:text="${user.getAge()}"></span>
-        <span th:text="${user.getEmail()}"></span>
-    </a>
+<a th:href="@{/(action='get', id=${user.getId()})}" th:each="user : ${users}">
+    <span th:text="${user.getName()}"></span>
+    <span th:text="${user.getSurname()}"></span>
+    <span th:text="${user.getAge()}"></span>
+    <span th:text="${user.getEmail()}"></span>
+    <br>
+</a>
 <hr>
+<div th:replace="~{form::form}"></div>
 </body>
 </html>

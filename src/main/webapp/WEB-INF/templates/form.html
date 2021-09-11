@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<form th:action="@{/(action=add)}" method="post" th:fragment="form">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" name="name"></td>
+        </tr>
+        <tr>
+            <td>Surname</td>
+            <td><input type="text" name="surname"></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td><input type="number" name="age"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="email" name="email"></td>
+        </tr>
+    </table>
+    <input type="submit" value="ADD">
+</form>
+</body>
+</html>
