@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +24,20 @@ public class User {
     private LocalDateTime timeCreated;
     private LocalDateTime lastUpdated;
     private boolean isDeleted;
+
+    public User() {
+    }
+
+    public User(ResultSet resultSet) throws SQLException {
+        id = resultSet.getInt("id");
+        name = resultSet.getString("name");
+        surname = resultSet.getString("surname");
+        age = resultSet.getInt("age");
+        email = resultSet.getString("email");
+        timeCreated = resultSet.getObject("time_created", LocalDateTime.class);
+        lastUpdated = resultSet.getObject("last_updated", LocalDateTime.class);
+        isDeleted = resultSet.getBoolean("is_deleted");
+    }
 
     public void setAge(int age) {
         if (age < 0) {

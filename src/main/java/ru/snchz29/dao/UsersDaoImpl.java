@@ -3,7 +3,10 @@ package ru.snchz29.dao;
 import lombok.extern.java.Log;
 import ru.snchz29.models.User;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -31,7 +34,7 @@ public class UsersDaoImpl implements UsersDao {
         if (!resultSet.next() || resultSet.getBoolean("is_deleted")) {
             throw new UserNotFoundException();
         } else {
-            return createUserFromResultSet(resultSet);
+            return new User(resultSet);
         }
     }
 
@@ -44,7 +47,7 @@ public class UsersDaoImpl implements UsersDao {
         while (resultSet.next()) {
             boolean isDeleted = resultSet.getBoolean("is_deleted");
             if (!isDeleted) {
-                users.add(createUserFromResultSet(resultSet));
+                users.add(new User(resultSet));
             }
         }
         connection.closeConnection();
@@ -77,17 +80,5 @@ public class UsersDaoImpl implements UsersDao {
         statement.setInt(1, id);
         statement.executeUpdate();
         connection.closeConnection();
-    }
-
-    private User createUserFromResultSet(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getInt("id"));
-        user.setName(resultSet.getString("name"));
-        user.setSurname(resultSet.getString("surname"));
-        user.setAge(resultSet.getInt("age"));
-        user.setTimeCreated(resultSet.getObject("time_created", LocalDateTime.class));
-        user.setLastUpdated(resultSet.getObject("last_updated", LocalDateTime.class));
-        user.setDeleted(resultSet.getBoolean("is_deleted"));
-        return user;
     }
 }
