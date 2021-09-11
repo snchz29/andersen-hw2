@@ -12,17 +12,16 @@ public class GetAction extends AbstractAction {
     @Override
     public String exec(WebContext context) {
         log.info("Get method");
-        String result;
         try {
             if (context.getRequest().getParameter("id") != null) {
                 User user = dao.getUserById(Integer.parseInt(context.getRequest().getParameter("id")));
-                result = user.toString();
+                context.setVariable("user", user);
+                return "user";
             } else {
                 Iterable<User> users = dao.getAllUsers();
                 context.setVariable("users", users);
-                result = "allUsers";
+                return "allUsers";
             }
-            return result;
         } catch (SQLException e) {
             e.printStackTrace();
             return "error";

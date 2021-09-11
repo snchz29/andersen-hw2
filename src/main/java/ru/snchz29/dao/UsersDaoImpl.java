@@ -17,6 +17,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void insertUser(User user) throws SQLException {
+        log.info("CREATE");
         String INSERT_USER = "INSERT INTO public.person(name, surname, age, email, time_created, last_updated) VALUES(?,?,?,?,?,?);";
         PreparedStatement statement = putCommonParams(user, INSERT_USER);
         statement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
@@ -26,20 +27,24 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public User getUserById(int id) throws SQLException {
+        log.info("READ ONE");
         String GET_USER_BY_ID = "SELECT * FROM public.person WHERE id=?;";
         PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
         connection.closeConnection();
-        if (!resultSet.next() || resultSet.getBoolean("is_deleted")) {
+        if (!resultSet.next()) {
             throw new UserNotFoundException();
-        } else {
-            return new User(resultSet);
         }
+        if (resultSet.getBoolean("is_deleted")) {
+            throw new UserNotFoundException();
+        }
+        return new User(resultSet);
     }
 
     @Override
     public Iterable<User> getAllUsers() throws SQLException {
+        log.info("READ ALL");
         String GET_ALL_USERS = "SELECT * FROM public.person;";
         PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
         ResultSet resultSet = statement.executeQuery();
@@ -56,6 +61,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void updateUser(int id, User user) throws SQLException {
+        log.info("UPDATE");
         String UPDATE_USER = "UPDATE public.person SET name=?, surname=?, age=?, email=?, last_updated=? WHERE id=?;";
         PreparedStatement statement = putCommonParams(user, UPDATE_USER);
         statement.setInt(6, id);
@@ -75,6 +81,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void deleteUser(int id) throws SQLException {
+        log.info("DELETE");
         String DELETE_USER = "UPDATE public.person SET is_deleted=true WHERE id=?;";
         PreparedStatement statement = connection.prepareStatement(DELETE_USER);
         statement.setInt(1, id);
