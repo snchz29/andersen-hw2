@@ -27,10 +27,18 @@ public class MainServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) {
         super.init(config);
+        prepareActionMap();
+        prepareTemplateEngine();
+    }
+
+    private void prepareActionMap() {
         actionMap.put("get", new GetAction());
         actionMap.put("add", new AddAction());
         actionMap.put("update", new UpdateAction());
         actionMap.put("delete", new DeleteAction());
+    }
+
+    private void prepareTemplateEngine(){
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(getServletContext());
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/WEB-INF/templates/");
@@ -45,10 +53,18 @@ public class MainServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
         WebContext context = new WebContext(req, resp, getServletContext(), req.getLocale());
         String actionKey = req.getParameter("action");
+        if (actionKey == null) {
+            resp.sendRedirect("/?action=get");
+            return;
+        }
         Action action = actionMap.get(actionKey);
         String view = action.exec(context);
-        log.info(view);
-        log.info(context.getVariable("users").toString());
+        if (view.startsWith("redirect")) {
+            String path = view.substring("redirect".length() + 1);
+            log.info("Redirect to " + path);
+            resp.sendRedirect(path);
+            return;
+        }
         templateEngine.process(view, context, resp.getWriter());
     }
 

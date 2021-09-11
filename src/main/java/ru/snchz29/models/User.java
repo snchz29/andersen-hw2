@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.java.Log;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
 
 @Data
 @ToString
+@Log
 public class User {
     private long id;
     private String name;
@@ -29,14 +32,21 @@ public class User {
     }
 
     public User(ResultSet resultSet) throws SQLException {
-        id = resultSet.getInt("id");
-        name = resultSet.getString("name");
-        surname = resultSet.getString("surname");
-        age = resultSet.getInt("age");
-        email = resultSet.getString("email");
-        timeCreated = resultSet.getObject("time_created", LocalDateTime.class);
-        lastUpdated = resultSet.getObject("last_updated", LocalDateTime.class);
-        isDeleted = resultSet.getBoolean("is_deleted");
+        setId(resultSet.getInt("id"));
+        setName(resultSet.getString("name"));
+        setSurname(resultSet.getString("surname"));
+        setAge(resultSet.getInt("age"));
+        setEmail(resultSet.getString("email"));
+        setTimeCreated(resultSet.getObject("time_created", LocalDateTime.class));
+        setLastUpdated(resultSet.getObject("last_updated", LocalDateTime.class));
+        setDeleted(resultSet.getBoolean("is_deleted"));
+    }
+
+    public User(HttpServletRequest request) {
+        setName(request.getParameter("name"));
+        setSurname(request.getParameter("surname"));
+        setAge(Integer.parseInt(request.getParameter("age")));
+        setEmail(request.getParameter("email"));
     }
 
     public void setAge(int age) {
@@ -47,7 +57,10 @@ public class User {
     }
 
     public void setEmail(String email) {
-        Pattern pattern = Pattern.compile("");
+        if (email == null) {
+            return;
+        }
+        Pattern pattern = Pattern.compile("^\\w[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Incorrect email");

@@ -10,12 +10,9 @@ public class AddAction extends AbstractAction {
     @Override
     public String exec(WebContext context) {
         try {
-            User user = new User();
-            user.setName(context.getRequest().getParameter("name"));
-            user.setSurname(context.getRequest().getParameter("surname"));
-            user.setAge(Integer.parseInt(context.getRequest().getParameter("age")));
+            User user = new User(context.getRequest());
             dao.insertUser(user);
-            return "redirect to root";
+            return "redirect:/?action=get";
         } catch (SQLException e) {
             e.printStackTrace();
             return "error";
