@@ -11,13 +11,11 @@ public class UpdateAction extends AbstractAction {
     @Override
     public String exec(HttpServletRequest request, HttpServletResponse response) {
         try {
-            dao.open();
             User user = new User();
             user.setName(request.getParameter("name"));
             user.setSurname(request.getParameter("surname"));
             user.setAge(Integer.parseInt(request.getParameter("age")));
             dao.updateUser(Integer.parseInt(request.getParameter("id")), user);
-            dao.close();
             return "redirect to user page";
         } catch (SQLException e) {
             e.printStackTrace();

@@ -16,7 +16,6 @@ public class GetAction extends AbstractAction {
         log.info("Get method");
         String result;
         try {
-            dao.open();
             if (request.getParameter("id") != null){
                 User user = dao.getUserById(Integer.parseInt(request.getParameter("id")));
                 result = user.toString();
@@ -25,7 +24,6 @@ public class GetAction extends AbstractAction {
                 Iterable<User> users = dao.getAllUsers();
                 result = "allUsers";
             }
-            dao.close();
             return result;
         } catch (SQLException e) {
             e.printStackTrace();

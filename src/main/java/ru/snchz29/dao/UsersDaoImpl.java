@@ -7,47 +7,18 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Properties;
-
-import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 @Log
 public class UsersDaoImpl implements UsersDao {
-    private Connection connection;
-
-    @Override
-    public void open() throws SQLException {
-        log.info("Connection open");
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Properties props = new Properties();
-        props.setProperty("user", "postgres");
-        props.setProperty("password", "1234");
-        connection = DriverManager.getConnection("jdbc:postgresql://192.168.100.7:5432/andersen_hw2", props);
-        if (connection.getMetaData().supportsTransactionIsolationLevel(TRANSACTION_READ_COMMITTED)) {
-            connection.setTransactionIsolation(TRANSACTION_READ_COMMITTED);
-        }
-    }
-
-    @Override
-    public void close() throws SQLException {
-        log.info("Connection close");
-        connection.close();
-    }
+    private final DataBaseConnection connection = new DataBaseConnection();
 
     @Override
     public void insertUser(User user) throws SQLException {
-        String INSERT_USER = "INSERT INTO public.person(name, surname, age, time_created, last_updated) VALUES(?,?,?,?,?);";
-        PreparedStatement statement = connection.prepareStatement(INSERT_USER);
-        statement.setString(1, user.getName());
-        statement.setString(2, user.getSurname());
-        statement.setInt(3, user.getAge());
-        statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-        statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+        String INSERT_USER = "INSERT INTO public.person(name, surname, age, email, time_created, last_updated) VALUES(?,?,?,?,?,?);";
+        PreparedStatement statement = putCommonParams(user, INSERT_USER);
+        statement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
         statement.executeUpdate();
+        connection.closeConnection();
     }
 
     @Override
@@ -56,6 +27,7 @@ public class UsersDaoImpl implements UsersDao {
         PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
+        connection.closeConnection();
         if (!resultSet.next() || resultSet.getBoolean("is_deleted")) {
             throw new UserNotFoundException();
         } else {
@@ -75,19 +47,27 @@ public class UsersDaoImpl implements UsersDao {
                 users.add(createUserFromResultSet(resultSet));
             }
         }
+        connection.closeConnection();
         return users;
     }
 
     @Override
     public void updateUser(int id, User user) throws SQLException {
-        String UPDATE_USER = "UPDATE public.person SET name=?, surname=?, age=?, last_updated=? WHERE id=?;";
+        String UPDATE_USER = "UPDATE public.person SET name=?, surname=?, age=?, email=?, last_updated=? WHERE id=?;";
+        PreparedStatement statement = putCommonParams(user, UPDATE_USER);
+        statement.setInt(6, id);
+        statement.executeUpdate();
+        connection.closeConnection();
+    }
+
+    private PreparedStatement putCommonParams(User user, String UPDATE_USER) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(UPDATE_USER);
         statement.setString(1, user.getName());
         statement.setString(2, user.getSurname());
         statement.setInt(3, user.getAge());
-        statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-        statement.setInt(5, id);
-        statement.executeUpdate();
+        statement.setString(4, user.getEmail());
+        statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+        return statement;
     }
 
     @Override
@@ -96,6 +76,7 @@ public class UsersDaoImpl implements UsersDao {
         PreparedStatement statement = connection.prepareStatement(DELETE_USER);
         statement.setInt(1, id);
         statement.executeUpdate();
+        connection.closeConnection();
     }
 
     private User createUserFromResultSet(ResultSet resultSet) throws SQLException {

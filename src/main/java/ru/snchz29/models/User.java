@@ -12,6 +12,7 @@ public class User {
     private String name;
     private String surname;
     private int age;
+    private String email;
     private LocalDateTime timeCreated;
     private LocalDateTime lastUpdated;
     private boolean isDeleted;

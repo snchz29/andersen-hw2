@@ -5,9 +5,6 @@ import ru.snchz29.models.User;
 import java.sql.SQLException;
 
 public interface UsersDao {
-    void open() throws SQLException;
-
-    void close() throws SQLException;
 
     void insertUser(User user) throws SQLException;
 
