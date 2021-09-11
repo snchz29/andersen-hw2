@@ -4,26 +4,23 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<form th:action="@{/(action=add)}" method="post" th:fragment="form">
-    <table>
-        <tr>
-            <td>Name</td>
-            <td><input type="text" name="name"></td>
-        </tr>
-        <tr>
-            <td>Surname</td>
-            <td><input type="text" name="surname"></td>
-        </tr>
-        <tr>
-            <td>Age</td>
-            <td><input type="number" name="age"></td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="email" name="email"></td>
-        </tr>
-    </table>
-    <input type="submit" value="ADD">
-</form>
+<table th:fragment="form">
+    <tr>
+        <td>Name</td>
+        <td><input type="text" name="name" th:value="${user != null ? user.getName(): ''}"></td>
+    </tr>
+    <tr>
+        <td>Surname</td>
+        <td><input type="text" name="surname" th:value="${user != null ? user.getSurname() : ''}"></td>
+    </tr>
+    <tr>
+        <td>Age</td>
+        <td><input type="number" name="age" th:value="${user != null ? user.getAge() : ''}"></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><input type="email" name="email" th:value="${user != null ? user.getEmail() : ''}"></td>
+    </tr>
+</table>
 </body>
 </html>

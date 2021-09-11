@@ -7,5 +7,11 @@
 <body>
 <h1 th:text="${user.getName() + ' ' + user.getSurname() + ', ' + user.getAge()}"></h1>
 <i th:text="${user.getEmail()}"></i>
+<hr>
+<form th:action="@{/(action='update', id=${user.getId()})}" method="post">
+  <div th:replace="~{form::form(user=${user})}"></div>
+  <input type="submit" value="UPDATE">
+</form>
+<a th:href="@{/(action='delete', id=${user.getId()})}">DELETE</a>
 </body>
 </html>
