@@ -15,7 +15,7 @@
     </tr>
     <tr>
         <td>Age</td>
-        <td><input type="number" name="age" th:value="${user != null ? user.getAge() : ''}"></td>
+        <td><input type="number" name="age" min="1" th:value="${user != null ? user.getAge() : ''}"></td>
     </tr>
     <tr>
         <td>Email</td>
