@@ -32,7 +32,7 @@ public class User {
     }
 
     public User(ResultSet resultSet) throws SQLException {
-        setId(resultSet.getInt("id"));
+        setId(resultSet.getLong("id"));
         setName(resultSet.getString("name"));
         setSurname(resultSet.getString("surname"));
         setAge(resultSet.getInt("age"));
@@ -42,7 +42,7 @@ public class User {
         setDeleted(resultSet.getBoolean("is_deleted"));
     }
 
-    public User(HttpServletRequest request) {
+    public void setFromRequest(HttpServletRequest request) {
         setName(request.getParameter("name"));
         setSurname(request.getParameter("surname"));
         setAge(Integer.parseInt(request.getParameter("age")));

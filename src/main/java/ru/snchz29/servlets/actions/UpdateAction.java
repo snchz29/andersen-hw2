@@ -10,9 +10,10 @@ public class UpdateAction extends AbstractAction {
     @Override
     public String exec(WebContext context) {
         try {
-            User user = new User(context.getRequest());
+            User user = new User();
+            user.setFromRequest(context.getRequest());
             String id = context.getRequest().getParameter("id");
-            dao.updateUser(Integer.parseInt(id), user);
+            dao.updateUser(Long.parseLong(id), user);
             return "redirect:/?action=get&id=" + id;
         } catch (SQLException e) {
             e.printStackTrace();

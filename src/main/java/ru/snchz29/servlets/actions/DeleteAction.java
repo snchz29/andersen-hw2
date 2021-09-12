@@ -9,7 +9,7 @@ public class DeleteAction extends AbstractAction {
     @Override
     public String exec(WebContext context) {
         try {
-            dao.deleteUser(Integer.parseInt(context.getRequest().getParameter("id")));
+            dao.deleteUser(Long.parseLong(context.getRequest().getParameter("id")));
             return "redirect:/";
         } catch (SQLException e) {
             e.printStackTrace();
