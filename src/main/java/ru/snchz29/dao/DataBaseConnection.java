@@ -24,17 +24,21 @@ public class DataBaseConnection {
         Properties props = new Properties();
         props.setProperty("user", "postgres");
         props.setProperty("password", "1234");
-        connection = DriverManager.getConnection("jdbc:postgresql://192.168.100.7:5432/andersen_hw2", props);
+        connection = DriverManager.getConnection("jdbc:postgresql://192.168.100.10:5432/andersen_hw2", props);
         if (connection.getMetaData().supportsTransactionIsolationLevel(TRANSACTION_READ_COMMITTED)) {
             connection.setTransactionIsolation(TRANSACTION_READ_COMMITTED);
         }
     }
 
     public PreparedStatement prepareStatement(String SQL) throws SQLException {
-        if (connection == null || connection.isClosed()) {
+        if (isClosed()) {
             openConnection();
         }
         return connection.prepareStatement(SQL);
+    }
+
+    public boolean isClosed() throws SQLException {
+        return connection == null || connection.isClosed();
     }
 
     public void closeConnection() throws SQLException {

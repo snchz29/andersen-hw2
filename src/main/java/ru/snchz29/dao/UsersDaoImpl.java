@@ -13,12 +13,23 @@ import java.util.LinkedList;
 
 @Log
 public class UsersDaoImpl implements UsersDao {
-    private final DataBaseConnection connection = new DataBaseConnection();
+    private final DataBaseConnection connection;
+    private final String tableName;
+
+    public UsersDaoImpl() {
+        connection = new DataBaseConnection();
+        tableName = "person";
+    }
+
+    public UsersDaoImpl(String tableName) {
+        connection = new DataBaseConnection();
+        this.tableName = tableName;
+    }
 
     @Override
     public void insertUser(User user) throws SQLException {
         log.info("CREATE");
-        String INSERT_USER = "INSERT INTO public.person(name, surname, age, email, time_created, last_updated) VALUES(?,?,?,?,?,?);";
+        String INSERT_USER = "INSERT INTO public." + tableName + "(name, surname, age, email, time_created, last_updated) VALUES(?,?,?,?,?,?);";
         PreparedStatement statement = putCommonParams(user, INSERT_USER);
         statement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
         statement.executeUpdate();
@@ -26,26 +37,26 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public User getUserById(int id) throws SQLException {
+    public User getUserById(long id) throws SQLException {
         log.info("READ ONE");
-        String GET_USER_BY_ID = "SELECT * FROM public.person WHERE id=?;";
+        String GET_USER_BY_ID = "SELECT * FROM public." + tableName + " WHERE id=?;";
         PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID);
-        statement.setInt(1, id);
+        statement.setLong(1, id);
         ResultSet resultSet = statement.executeQuery();
         connection.closeConnection();
         if (!resultSet.next()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(id);
         }
         if (resultSet.getBoolean("is_deleted")) {
-            throw new UserNotFoundException();
+            throw new UserIsDeletedException(id);
         }
         return new User(resultSet);
     }
 
     @Override
-    public Iterable<User> getAllUsers() throws SQLException {
+    public Collection<User> getAllUsers() throws SQLException {
         log.info("READ ALL");
-        String GET_ALL_USERS = "SELECT * FROM public.person;";
+        String GET_ALL_USERS = "SELECT * FROM public." + tableName + ";";
         PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
         ResultSet resultSet = statement.executeQuery();
         Collection<User> users = new LinkedList<>();
@@ -60,11 +71,11 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void updateUser(int id, User user) throws SQLException {
+    public void updateUser(long id, User user) throws SQLException {
         log.info("UPDATE");
-        String UPDATE_USER = "UPDATE public.person SET name=?, surname=?, age=?, email=?, last_updated=? WHERE id=?;";
+        String UPDATE_USER = "UPDATE public." + tableName + " SET name=?, surname=?, age=?, email=?, last_updated=? WHERE id=?;";
         PreparedStatement statement = putCommonParams(user, UPDATE_USER);
-        statement.setInt(6, id);
+        statement.setLong(6, id);
         statement.executeUpdate();
         connection.closeConnection();
     }
@@ -80,11 +91,11 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUser(long id) throws SQLException {
         log.info("DELETE");
-        String DELETE_USER = "UPDATE public.person SET is_deleted=true WHERE id=?;";
+        String DELETE_USER = "UPDATE public." + tableName + " SET is_deleted=true WHERE id=?;";
         PreparedStatement statement = connection.prepareStatement(DELETE_USER);
-        statement.setInt(1, id);
+        statement.setLong(1, id);
         statement.executeUpdate();
         connection.closeConnection();
     }
