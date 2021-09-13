@@ -14,7 +14,7 @@ public class UpdateAction extends AbstractAction {
             user.setFromRequest(context.getRequest());
             String id = context.getRequest().getParameter("id");
             dao.updateUser(Long.parseLong(id), user);
-            return "redirect:/?action=get&id=" + id;
+            return "redirect:/?id=" + id;
         } catch (SQLException e) {
             e.printStackTrace();
             return "error";

@@ -38,7 +38,7 @@ public class MainServlet extends HttpServlet {
         actionMap.put("delete", new DeleteAction());
     }
 
-    private void prepareTemplateEngine(){
+    private void prepareTemplateEngine() {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(getServletContext());
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/WEB-INF/templates/");
@@ -52,13 +52,17 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
         WebContext context = new WebContext(req, resp, getServletContext(), req.getLocale());
-        String actionKey = req.getParameter("action");
-        if (actionKey == null) {
-            resp.sendRedirect("/?action=get");
+        String view;
+        if ("GET".equalsIgnoreCase(req.getMethod())){
+            String actionKey = req.getParameter("action");
+            view = actionMap.getOrDefault(actionKey, actionMap.get("get")).exec(context);
+        } else if ("POST".equalsIgnoreCase(req.getMethod())){
+            String actionKey = req.getParameter("action");
+            view = actionMap.getOrDefault(actionKey, actionMap.get("add")).exec(context);
+        } else {
+            resp.sendRedirect("/");
             return;
         }
-        Action action = actionMap.get(actionKey);
-        String view = action.exec(context);
         if (view.startsWith("redirect")) {
             String path = view.substring("redirect".length() + 1);
             log.info("Redirect to " + path);
