@@ -48,7 +48,7 @@ class UpdateActionTest {
         when(req.getParameter(eq("id"))).thenReturn("0");
         doNothing().when(dao).updateUser(anyLong(), any(User.class));
         String view = action.exec(context);
-        assertEquals("redirect:/?action=get&id=0", view);
+        assertEquals("redirect:/?id=0", view);
     }
 
     @SneakyThrows
